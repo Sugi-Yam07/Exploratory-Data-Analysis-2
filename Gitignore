@@ -1,1 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+*.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Diretório de logs
+logs/
+*.log
+
+# Arquivos de banco de dados
+*.sqlite3
+
+# Credenciais e arquivos de ambiente
+.env
+*.secret
+
+# Arquivos de cache e temporários
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# Arquivos de IDEs
+.vscode/
+.idea/
+
+# Diretório de imagens de gráficos
+images/
