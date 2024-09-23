@@ -1,1 +1,81 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import requests
+from io import StringIO
 
+# Link para o arquivo no Google Drive
+google_drive_link = "https://drive.google.com/file/d/1bRstkWsGKw3sb1F7rPxxULOF_BwlXYDx/view?usp=sharing"
+
+# Extrair o ID do arquivo do Google Drive
+file_id = google_drive_link.split("/")[-2]
+
+# Construir o link para download direto do arquivo CSV
+download_link = f"https://drive.google.com/uc?id={file_id}"
+
+# Fazer o request para obter o conteúdo do arquivo CSV
+response = requests.get(download_link)
+csv_content = response.content.decode('utf-8')
+
+# Ler o conteúdo do CSV em um DataFrame usando pandas
+df = pd.read_csv(StringIO(csv_content))
+
+# Listar as colunas do DataFrame
+print("Colunas do DataFrame:", df.columns)
+
+# Ajustar as visualizações de acordo com os dados presentes
+# Neste exemplo, vamos usar 'Date', 'Close' e 'Volume' como colunas de exemplo
+
+# Visualização 1: Histograma do preço de fechamento ('Close')
+plt.figure(figsize=(10, 6))
+sns.histplot(df['Close'], bins=15, kde=True, color='blue', edgecolor='black')
+plt.title('Distribuição dos Preços de Fechamento')
+plt.xlabel('Preço de Fechamento')
+plt.ylabel('Contagem')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Visualização 2: Gráfico de Dispersão entre 'Date' e 'Close'
+# Convertendo a coluna 'Date' para datetime se necessário
+if df['Date'].dtype == 'object':
+    df['Date'] = pd.to_datetime(df['Date'])
+
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='Date', y='Close', data=df, color='green', edgecolor='black')
+plt.title('Relação entre Data e Preço de Fechamento')
+plt.xlabel('Data')
+plt.ylabel('Preço de Fechamento')
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Visualização 3: Gráfico de Barras de Volume por Data
+plt.figure(figsize=(12, 8))
+sns.barplot(x='Date', y='Volume', data=df, palette='viridis')
+plt.title('Volume de Negociação por Data')
+plt.xlabel('Data')
+plt.ylabel('Volume')
+plt.xticks(rotation=45, ha='right')
+
+# Ajustar o número de rótulos exibidos no eixo x
+tick_labels = df['Date'].dt.strftime('%Y-%m-%d')
+plt.gca().set_xticklabels(tick_labels, rotation=45, ha='right')
+plt.gca().xaxis.set_major_locator(plt.MaxNLocator(10))  # Exibir no máximo 10 rótulos no eixo x
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+# Relatório completo
+print("Relatório Completo:")
+print("-" * 50)
+print("Resumo estatístico dos dados:")
+print(df.describe())
+print("\nExemplos de registros:")
+print(df.head())
+print("\nAnálise dos gráficos:")
+print("1. O histograma mostra a distribuição dos preços de fechamento dos produtos Nvidia.")
+print("2. O gráfico de dispersão ilustra a relação entre a data e o preço de fechamento.")
+print("3. O gráfico de barras exibe o volume de negociação por data.")
+
+# Fim do código
